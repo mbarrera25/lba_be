@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const authRoutes = require('./routes/auth');
 const patientRoutes = require('./routes/patient');
+const testRoutes = require('./routes/test');
 const  initDb  = require('./models/index');
 
 const app = express();
@@ -13,6 +14,7 @@ app.use(express.json());
 
 app.use('/api/auth', authRoutes);
 app.use('/api/patients', patientRoutes);
+app.use('/api/tests', testRoutes); // Usa las rutas de tests
 
 initDb().then(() => {
   app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
