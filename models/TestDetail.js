@@ -26,10 +26,6 @@ const TestDetail = sequelize.define('TestDetail', {
       result_value: {
         type: DataTypes.STRING,
       },
-      date: {
-        type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW
-      },
       testId: {
         type: DataTypes.INTEGER,
         allowNull: false,
