@@ -25,7 +25,7 @@ const initDb = async () => {
       await User.create({
         email: 'admin',
         password: 'admin',
-        nombre: 'Administrador',
+        nombres: 'Administrador',
         rol: 'admin'
       });
       console.log('Usuario administrador creado');
