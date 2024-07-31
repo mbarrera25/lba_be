@@ -1,7 +1,7 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { User } = require('../models');
+const  User  = require('../models/user');
 const authMiddleware = require('../middlewares/auth');
 const router = express.Router();
 
@@ -26,10 +26,12 @@ router.post('/login', async (req, res) => {
     const { email, password } = req.body;
 
     const user = await User.findOne({ where: { email } });
+    console.log(user);
     if (!user) {
+      console.log('error')
       return res.status(400).send('Usuario o contraseña incorrectos');
     }
-
+    console.log(password);
     const isMatch = await bcrypt.compare(password, user.password);
     console.log(isMatch);
     
