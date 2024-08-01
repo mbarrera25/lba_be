@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const { Op } = require('sequelize');
 const Test = require('../models/Test');
 const TestDetail = require('../models/TestDetail');
 
@@ -87,9 +88,34 @@ router.get('/', async (req, res) => {
   }
 });
 
+router.get('/search', async (req, res) => {
+  const  query  = req.query.search;
+  if (!query) {
+    return res.status(400).json({ error: 'Query parameter is required' });
+  }
+
+  try {
+    const tests = await Test.findAll({
+      where: {
+        [Op.or]: [
+          { name: { [Op.iLike]: `%${query}%` } },
+          { code: { [Op.iLike]: `%${query}%` } },
+          { description: { [Op.iLike]: `%${query}%` } },
+        ],
+      },
+    });
+  res.status(200).json(tests);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+
+});
+
+
 // Obtener un test por ID
 router.get('/:id', async (req, res) => {
   try {
+    console.log("Soy get/:id")
     const test = await Test.findByPk(req.params.id, {include: TestDetail});
     if (test) {
       res.status(200).json(test);
@@ -105,7 +131,6 @@ router.get('/:id', async (req, res) => {
 // Eliminar un test por ID
 router.delete('/:id', async (req, res) => {
   try {
-    console.log("eliminando.............................................");
     const test = await Test.findByPk(req.params.id,{ include: TestDetail});
     if (test) {
       await test.destroy();
@@ -117,5 +142,7 @@ router.delete('/:id', async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 });
+
+
 
 module.exports = router;

@@ -5,6 +5,8 @@ const authRoutes = require('./routes/auth');
 const patientRoutes = require('./routes/patient');
 const testRoutes = require('./routes/test');
 const testDetailRoutes = require('./routes/testDetail');
+const analysisRoutes = require('./routes/analysis');
+const analysisTestRoutes = require('./routes/analysistest');
 const  initDb  = require('./models/index');
 
 const app = express();
@@ -17,6 +19,8 @@ app.use('/api/auth', authRoutes);
 app.use('/api/patients', patientRoutes);
 app.use('/api/tests', testRoutes); // Usa las rutas de tests
 app.use('/api/testdetail', testDetailRoutes); // Usa las rutas de tests
+app.use('/api/analisys', analysisRoutes); // Usa las rutas de tests
+app.use('/api/analysisTest', analysisTestRoutes); // Usa las rutas de tests
 
 initDb().then(() => {
   app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

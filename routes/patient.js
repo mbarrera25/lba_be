@@ -66,4 +66,26 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
+router.get('/search',async (req, res) => {
+  const { query } = req.query;
+
+  if (!query) {
+    return res.status(400).json({ error: 'Query parameter is required' });
+  }
+
+  try {
+    const patients = await Patient.findAll({
+      where: {
+        [Op.or]: [
+          { full_name: { [Op.iLike]: `%${query}%` } },
+          { identification: { [Op.iLike]: `%${query}%` } }
+        ],
+      },
+    });
+    res.status(200).json(patients);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
 module.exports = router;

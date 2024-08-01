@@ -12,8 +12,8 @@ const initDb = async () => {
     Test.hasMany(TestDetails, { foreignKey: 'testId',  onDelete: 'CASCADE'  });
     TestDetails.belongsTo(Test, { foreignKey: 'testId' });
 
-    Analysis.belongsToMany(Test, { through: 'AnalysisTests' });
-    Test.belongsToMany(Analysis, { through: 'AnalysisTests' });
+    Analysis.belongsToMany(Test, { through: 'analysis_test', onDelete: 'CASCADE' });
+    Test.belongsToMany(Analysis, { through: 'analysis_test', onDelete: 'CASCADE' });
 
     await sequelize.authenticate();
     console.log('Connection has been established successfully.');
