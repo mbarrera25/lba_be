@@ -1,9 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const { Op } = require('sequelize');
+const multer = require('multer');
+const csv = require('csv-parser');
+const fs = require('fs');
+const path = require('path');
+
 const Test = require('../models/Test');
 const TestDetail = require('../models/TestDetail');
-
+const upload = multer({ dest: 'uploads/' });
 // Crear un nuevo test junto con sus detalles
 router.post('/', async (req, res) => {
   const { code, name, description, price, date, TestDetails } = req.body;
@@ -143,6 +148,40 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
+// Crear un nuevo lote de tests junto con sus detalles
+router.post('/bulk', async (req, res) => {
+  const tests = req.body.tests; // Se espera que los tests y sus detalles se pasen en el cuerpo de la solicitud
+  console.log(req.body);
+  
+  try {
+    // Crear los tests
+    const createdTests = await Test.bulkCreate(tests, { returning: true });
 
+    // Crear los detalles de los tests
+    const testDetails = [];
+    createdTests.forEach((test, index) => {
+      if (tests[index].TestDetails && tests[index].TestDetails.length > 0) {
+        tests[index].TestDetails.forEach(detail => {
+          testDetails.push({
+            ...detail,
+            testId: test.id
+          });
+        });
+      }
+    });
+
+    await TestDetail.bulkCreate(testDetails);
+
+    // Consultar los tests con sus detalles y devolverlos en la respuesta
+    const result = await Test.findAll({
+      where: { id: createdTests.map(test => test.id) },
+      include: [TestDetail]
+    });
+
+    res.status(201).json(result);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
 
 module.exports = router;
