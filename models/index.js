@@ -3,7 +3,10 @@ const User = require('./user');
 const Test = require('./Test');
 const TestDetails = require('./TestDetail');
 const Analysis = require('./Analysis');
+const ExchangeCurrency = require('./ExchangeCurrency');
 const bcrypt = require('bcryptjs');
+const Currency = require('./Currency');
+const MetodoDePago = require('./metodoDePago')
 
 // Sincronizar todos los modelos con la base de datos
 const initDb = async () => {
@@ -14,6 +17,15 @@ const initDb = async () => {
 
     Analysis.belongsToMany(Test, { through: 'analysis_test', onDelete: 'CASCADE' });
     Test.belongsToMany(Analysis, { through: 'analysis_test', onDelete: 'CASCADE' });
+
+
+    Currency.hasMany( ExchangeCurrency, { foreignKey: 'currencyId'});
+    ExchangeCurrency.belongsTo(Currency, { foreignKey: 'currencyId'});
+    
+    Currency.hasMany(MetodoDePago, { foreignKey: 'currencyId'})
+    MetodoDePago.belongsTo(Currency, { foreignKey: 'currencyId'});
+    
+
 
     await sequelize.authenticate();
     console.log('Connection has been established successfully.');
@@ -34,6 +46,27 @@ const initDb = async () => {
       console.log('Usuario administrador creado');
     } else {
       console.log('Usuario administrador ya existe');
+    }
+
+    const monUsd = await Currency.findOne({ where: { iso: 'USD' } })
+    if ( !monUsd ){
+      await Currency.create({
+        nombre: 'Dolar USD',
+        iso: 'USD',
+        simbolo: '$',
+        activa: true,
+
+      })
+    }
+    const monVes = await Currency.findOne({ where: { iso: 'VES' } })
+    if ( !monVes ){
+      await Currency.create({
+        nombre: 'Bolivar BS',
+        iso: 'VES',
+        simbolo: 'Bs.',
+        activa: true,
+        
+      })
     }
   } catch (error) {
     console.error('Unable to connect to the database:', error);

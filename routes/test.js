@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const { Op } = require('sequelize');
 const multer = require('multer');
-const csv = require('csv-parser');
 const fs = require('fs');
 const path = require('path');
 
