@@ -1,8 +1,8 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
-  const Currency = sequelize.define('Currency', {
-    nombre: {
+  const Currency = sequelize.define('currency', {
+    name: {
       type: DataTypes.STRING,
       allowNull: false
     },
@@ -10,11 +10,11 @@ const sequelize = require('../config/database');
       type: DataTypes.STRING,
       allowNull: false
     },
-    simbolo: {
+    symbol: {
       type: DataTypes.STRING,
       allowNull: false
     },
-    activa: {
+    active: {
       type: DataTypes.BOOLEAN,
       allowNull: false
     }

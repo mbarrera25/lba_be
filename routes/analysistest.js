@@ -1,9 +1,9 @@
 // routes/analysistest.js
 const express = require('express');
 const router = express.Router();
-const Test = require('../models/Test');
-const Analysis = require('../models/Analysis');
-const AnalysisTest = require('../models/AnalysisTests');
+const Test = require('../models/test');
+const Analysis = require('../models/analysis');
+const AnalysisTest = require('../models/analysis_Tests');
 
 
 // Ruta para crear una relación entre un Analysis y un Test
@@ -13,8 +13,8 @@ router.post('/', async (req, res) => {
   try {
     // Crear la relación en la tabla de unión
     const newRelation = await AnalysisTest.create({
-      AnalysisId: analysisId,
-      TestId: testId,
+      analysis_id: analysisId,
+      test_id: testId,
     });
 
     res.status(201).json(newRelation);
@@ -26,7 +26,7 @@ router.post('/', async (req, res) => {
 router.delete("/:id", async (req, res) => {
     try {
       const deleted = await AnalysisTest.destroy({
-        where: { TestId: req.params.id }, 
+        where: { test_id: req.params.id }, 
       });
       if (deleted) {
         res.status(204).json();

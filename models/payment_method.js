@@ -1,20 +1,20 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/database");
-const Currency = require("./Currency")
+const Currency = require("./currency")
 
 const MetodoDePago = sequelize.define(
-  "MetodoDePago",
+  "payment_method",
   {
-    codigo: {
+    code: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    nombre: {
+    name: {
       type: DataTypes.STRING,
       allowNull: false,
     },
     // Campo adicional para la clave foránea
-    currencyId: {
+    currency_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
@@ -22,13 +22,13 @@ const MetodoDePago = sequelize.define(
         key: "id",
       },
     },
-    simbolo: {
+    symbol: {
       type: DataTypes.STRING,
       allowNull: false,
     },
   },
   {
-    tableName: "metodos_de_pago",
+    tableName: "payment_method",
   }
 );
 

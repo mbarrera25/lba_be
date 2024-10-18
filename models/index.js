@@ -1,75 +1,102 @@
-const sequelize = require('../config/database');
-const User = require('./user');
-const Test = require('./Test');
-const TestDetails = require('./TestDetail');
-const Analysis = require('./Analysis');
-const ExchangeCurrency = require('./ExchangeCurrency');
-const bcrypt = require('bcryptjs');
-const Currency = require('./Currency');
-const MetodoDePago = require('./metodoDePago')
+const sequelize = require("../config/database");
+const User = require("./user");
+const Test = require("./test");
+const TestDetails = require("./test_detail");
+const Analysis = require("./analysis");
+const exchange_currency = require("./exchange_currency");
+const Currency = require("./currency");
+const payment_method = require("./payment_method");
+const Requests = require("./Requests");
+const Patient = require("./patient");
+const bcrypt = require("bcryptjs");
 
 // Sincronizar todos los modelos con la base de datos
 const initDb = async () => {
   try {
     // Definir relaciones
-    Test.hasMany(TestDetails, { foreignKey: 'testId',  onDelete: 'CASCADE'  });
-    TestDetails.belongsTo(Test, { foreignKey: 'testId' });
+    Test.hasMany(TestDetails, { foreignKey: "test_id", onDelete: "CASCADE" });
+    TestDetails.belongsTo(Test, { foreignKey: "test_id" });
+    // Relaciones de Analysis
+    Analysis.belongsToMany(Test, {
+      through: "analysis_test",
+      onDelete: "CASCADE",
+    });
+    Test.belongsToMany(Analysis, {
+      through: "analysis_test",
+      onDelete: "CASCADE",
+    });
 
-    Analysis.belongsToMany(Test, { through: 'analysis_test', onDelete: 'CASCADE' });
-    Test.belongsToMany(Analysis, { through: 'analysis_test', onDelete: 'CASCADE' });
+    // Relaciones de ExchangeCurrency
+    Currency.hasMany(exchange_currency, { foreignKey: "currency_id" });
+    exchange_currency.belongsTo(Currency, { foreignKey: "currency_id" });
 
+    // Relaciones de ExchangeCurrency
+    Currency.hasMany(payment_method, { foreignKey: "currency_id" });
+    payment_method.belongsTo(Currency, { foreignKey: "currency_id" });
 
-    Currency.hasMany( ExchangeCurrency, { foreignKey: 'currencyId'});
-    ExchangeCurrency.belongsTo(Currency, { foreignKey: 'currencyId'});
-    
-    Currency.hasMany(MetodoDePago, { foreignKey: 'currencyId'})
-    MetodoDePago.belongsTo(Currency, { foreignKey: 'currencyId'});
-    
-
+    // Relaciones de Solicitud
+    Requests.belongsTo(Patient, {
+      foreignKey: "patient_id",
+      as: "patient",
+      onDelete: "CASCADE",
+    });
+    Requests.belongsToMany(Analysis, {
+      through: "request_analysis",
+      foreignKey: "request_id",
+      otherKey: "analysis_id",
+      as: "analysis",
+      onDelete: "CASCADE",
+    });
+    Analysis.belongsToMany(Requests, {
+      through: "request_analysis",
+      foreignKey: "analysis_id",
+      otherKey: "request_id",
+      as: "request",
+      onDelete: "CASCADE",
+    });
 
     await sequelize.authenticate();
-    console.log('Connection has been established successfully.');
-    
-    await sequelize.sync({ force: false });
-    console.log('Database synchronized.');
+    console.log("Connection has been established successfully.");
 
-    const adminUser = await User.findOne({ where: { email: 'admin@d' } });
+    await sequelize.sync({ force: false });
+    console.log("Database synchronized.");
+
+    // Crear usuario administrador por defecto
+    const adminUser = await User.findOne({ where: { email: "admin@d" } });
     if (!adminUser) {
-      const pass =  await bcrypt.hash('admin', 10)
+      const pass = await bcrypt.hash("admin", 10);
       console.log(pass);
       await User.create({
-        email: 'admin@d',
+        email: "admin@d",
         password: pass,
-        nombres: 'Administrador',
-        rol: 'admin'
+        names: "Administrador",
+        role: "admin",
       });
-      console.log('Usuario administrador creado');
+      console.log("Usuario administrador creado");
     } else {
-      console.log('Usuario administrador ya existe');
+      console.log("Usuario administrador ya existe");
     }
-
-    const monUsd = await Currency.findOne({ where: { iso: 'USD' } })
-    if ( !monUsd ){
+    // Crear monedas por defecto
+    const monUsd = await Currency.findOne({ where: { iso: "USD" } });
+    if (!monUsd) {
       await Currency.create({
-        nombre: 'Dolar USD',
-        iso: 'USD',
-        simbolo: '$',
-        activa: true,
-
-      })
+        name: "Dolar USD",
+        iso: "USD",
+        symbol: "$",
+        active: true,
+      });
     }
-    const monVes = await Currency.findOne({ where: { iso: 'VES' } })
-    if ( !monVes ){
+    const monVes = await Currency.findOne({ where: { iso: "VES" } });
+    if (!monVes) {
       await Currency.create({
-        nombre: 'Bolivar BS',
-        iso: 'VES',
-        simbolo: 'Bs.',
-        activa: true,
-        
-      })
+        name: "Bolivar BS",
+        iso: "VES",
+        symbol: "Bs.",
+        active: true,
+      });
     }
   } catch (error) {
-    console.error('Unable to connect to the database:', error);
+    console.error("Unable to connect to the database:", error);
   }
 };
 

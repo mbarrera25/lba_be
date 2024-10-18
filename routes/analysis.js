@@ -1,11 +1,11 @@
 // controllers/analysisController.js
 const express = require('express');
 const router = express.Router();
-
-const Analysis = require("../models/Analysis");
-const Test = require('../models/Test');
-const TestDetail = require('../models/TestDetail');
-const AnalysisTest = require('../models/AnalysisTests');
+const { Op } = require("sequelize");
+const Analysis = require("../models/analysis");
+const Test = require('../models/test');
+const TestDetail = require('../models/test_detail');
+const AnalysisTest = require('../models/analysis_Tests');
 
 router.post("/", async (req, res) => {
   try {
@@ -14,10 +14,10 @@ router.post("/", async (req, res) => {
     const analysis = await Analysis.create(body);
 
      // Crear la relación en la tabla de unión
-     const relations = req.body.Test.map( async t => {
+     const relations = req.body.Tests.map( async t => {
          await AnalysisTest.create({
-        AnalysisId: analysis.id,
-        TestId: t.id,
+        analysis_id: analysis.id,
+        test_id: t.id,
       });
      })
      await Promise.all(relations);
@@ -59,6 +59,32 @@ router.get("/", async (req, res) => {
             page: parseInt(page) || 1, 
             size: limit },
       });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+// Buscar análisis por nombre, código o descripción
+router.get("/search", async (req, res) => {
+  const { query } = req.query;
+
+  if (!query) {
+    return res.status(400).json({ error: "Query parameter is required" });
+  }
+
+  try {
+    const analyses = await Analysis.findAll({
+      where: {
+        [Op.or]: [
+          { name: { [Op.iLike]: `%${query}%` } },
+          { code: { [Op.iLike]: `%${query}%` } },
+          { description: { [Op.iLike]: `%${query}%` } },
+      ]
+      },include: {
+        model: Test,
+        through: { attributes: [] } // Esto excluirá los atributos de la tabla de unión
+      }
+    });
+    res.status(200).json(analyses);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }

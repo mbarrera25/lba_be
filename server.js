@@ -11,7 +11,8 @@ const exchangeCurrency = require('./routes/exchangeCurrency');
 const talonarioRoutes = require('./routes/talonario');
 const metodoDePagoRoutes = require('./routes/metodoDePago')
 const currency = require('./routes/currency')
-
+const exchangeRate = require('./routes/exchangeRate')
+const solicitud = require('./routes/solicitudes')
 const fetchAndSaveExchangeRate = require('./routes/scheduledTask');
 const  initDb  = require('./models/index');
 
@@ -31,6 +32,9 @@ app.use('/api/exchangeCurrency', exchangeCurrency); // Usa las rutas de tests
 app.use('/api/talonarios', talonarioRoutes);
 app.use('/api/metodos-de-pago', metodoDePagoRoutes);
 app.use('/api/currency', currency);
+app.use('/api/exchange-rate', exchangeRate);
+app.use('/api/solicitudes', solicitud);
+
 initDb().then(() => {
   app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 });

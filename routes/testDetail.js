@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const TestDetail = require('../models/TestDetail');
-const Test = require('../models/Test');
+const TestDetail = require('../models/test_detail');
+const Test = require('../models/test');
 
 // Crear un nuevo TestDetail
 router.post('/', async (req, res) => {

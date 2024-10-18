@@ -2,7 +2,7 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
 
-const Analysis = sequelize.define('Analysis',{
+const Analysis = sequelize.define('analysis',{
 
     id: {
         type: DataTypes.INTEGER,
@@ -44,4 +44,12 @@ const Analysis = sequelize.define('Analysis',{
     tableName: 'analysis'
 });
 
+Analysis.associate = (models) => {
+  Analysis.belongsToMany(models.Solicitud, {
+    through: 'request_analysis',
+    foreignKey: 'analysis_id',
+    otherKey: 'request_id',
+    as: 'request', // Definición del alias en la relación inversa
+  });
+};
 module.exports = Analysis;

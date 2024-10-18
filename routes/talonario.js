@@ -1,7 +1,7 @@
 // routes/talonario.js
 const express = require('express');
 const router = express.Router();
-const Talonario = require('../models/talonario');
+const Talonario = require('../models/book_payment');
 
 // GET all talonarios
 router.get('/', async (req, res) => {

@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express()
-const ExchangeCurrency = require('../models/ExchangeCurrency')
-const Currency = require('../models/Currency')
+const ExchangeCurrency = require('../models/exchange_currency')
+const Currency = require('../models/currency')
 
 // Crear una tasa
 router.post('/', async (req, res) => {
@@ -17,7 +17,7 @@ router.post('/', async (req, res) => {
   
       // Crear el objeto con el ID de la moneda
       const newExchangeRate = {
-        currencyId: currency.id,
+        currency_id: currency.id,
         rate: tasa,
         date: new Date(fecha)
       };

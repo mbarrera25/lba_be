@@ -1,20 +1,20 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
-const Talonario = sequelize.define('Talonario', {
-    nombre: {
+const book_payment = sequelize.define('book_payment', {
+    name: {
       type: DataTypes.STRING,
       allowNull: false
     },
-    nroActual: {
+    nro_current: {
       type: DataTypes.INTEGER,
       allowNull: false
     },
-    nroInicial: {
+    nro_initial: {
       type: DataTypes.INTEGER,
       allowNull: false
     },
-    nroFinal: {
+    nro_end: {
       type: DataTypes.INTEGER,
       allowNull: false
     },
@@ -22,16 +22,16 @@ const Talonario = sequelize.define('Talonario', {
       type: DataTypes.STRING,
       allowNull: false
     },
-    tipo: {
+    type: {
       type: DataTypes.STRING,
       allowNull: false
     },
-    estatus: {
+    status: {
       type: DataTypes.BOOLEAN,
       allowNull: false
     }
   }, {
-    tableName: 'talonarios'
+    tableName: 'book_payment'
   });
   
-  module.exports = Talonario;
+  module.exports = book_payment;

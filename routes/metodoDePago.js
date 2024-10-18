@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const MetodoDePago = require("../models/metodoDePago");
-const Currency = require("../models/Currency");
+const MetodoDePago = require("../models/payment_method");
+const Currency = require("../models/currency");
 
 // GET all metodos de pago
 router.get("/", async (req, res) => {

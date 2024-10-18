@@ -5,8 +5,8 @@ const multer = require('multer');
 const fs = require('fs');
 const path = require('path');
 
-const Test = require('../models/Test');
-const TestDetail = require('../models/TestDetail');
+const Test = require('../models/test');
+const TestDetail = require('../models/test_detail');
 const upload = multer({ dest: 'uploads/' });
 // Crear un nuevo test junto con sus detalles
 router.post('/', async (req, res) => {
@@ -20,7 +20,7 @@ router.post('/', async (req, res) => {
     if (TestDetails && TestDetails.length > 0) {
       const testDetails = TestDetails.map(det => ({
         ...det,
-        testId: test.id
+        test_id: test.id
       }));
       await TestDetail.bulkCreate(testDetails);
     }
@@ -46,7 +46,7 @@ router.put('/:id', async (req, res) => {
       await test.update(req.body);
       const { TestDetails } = req.body
       for (const detail of TestDetails) {
-        await TestDetail.upsert({...detail, testId: test.id});
+        await TestDetail.upsert({...detail, test_id: test.id});
       }
       res.status(200).json(test);
     } else {
@@ -163,7 +163,7 @@ router.post('/bulk', async (req, res) => {
         tests[index].TestDetails.forEach(detail => {
           testDetails.push({
             ...detail,
-            testId: test.id
+            test_id: test.id
           });
         });
       }

@@ -26,7 +26,7 @@ const TestDetail = sequelize.define('TestDetail', {
       result_value: {
         type: DataTypes.STRING,
       },
-      testId: {
+      test_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {

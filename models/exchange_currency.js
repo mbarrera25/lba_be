@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
-  const ExchangeCurrency = sequelize.define('ExchangeCurrency', {
+  const ExchangeCurrency = sequelize.define('exchange_currency', {
     date: {
       type: DataTypes.DATEONLY,
       allowNull: false
@@ -10,7 +10,7 @@ const sequelize = require('../config/database');
       type: DataTypes.DOUBLE,
       allowNull: false
     },
-    currencyId: {
+    currency_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {

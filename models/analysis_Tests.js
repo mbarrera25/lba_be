@@ -2,7 +2,7 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
     const AnalysisTest = sequelize.define('analysis_test', {
-      AnalysisId: {
+      analysis_id: {
         type: DataTypes.INTEGER,
         references: {
           model: 'analysis',
@@ -12,7 +12,7 @@ const sequelize = require('../config/database');
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
       },
-      TestId: {
+      test_id: {
         type: DataTypes.INTEGER,
         references: {
           model: 'test',
