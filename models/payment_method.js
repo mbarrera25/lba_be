@@ -26,6 +26,11 @@ const MetodoDePago = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    type: { // efectivo bs, efectivo usd, electronico bs, eletronico usd, debito, pago m. / transferencia
+      type: DataTypes.STRING,
+      allowNull: false,
+      defaultValue: 'electronico bs'
+    },
   },
   {
     tableName: "payment_method",

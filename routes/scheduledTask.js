@@ -5,18 +5,13 @@ const axios = require("axios");
 const { Op } = require('sequelize');
 const ExchangeRateLog = require("../models/exchange_rate_log")
 const moment = require('moment');
+const getRateData = require('./rateData')
 
 // Función para obtener la tasa de cambio y guardarla en la base de datos
 async function fetchAndSaveExchangeRate() {
   try {
-    const response = await axios.get(
-      "https://v6.exchangerate-api.com/v6/aa44279955ea67f215974911/latest/USD",
-      {
-        headers: { apikey: "aa44279955ea67f215974911" },
-      }
-    );
-
-    const rateData = response.data.conversion_rates.VES;
+    
+    const rateData = await getRateData();
 
     const currency = await Currency.findOne({ where: { iso: "USD" } });
 

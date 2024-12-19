@@ -10,7 +10,7 @@ const AnalysisTest = require('../models/analysis_Tests');
 router.post("/", async (req, res) => {
   try {
     let  body  = req.body
-    body = {...body, currency: "usd"}
+    body = {...body, currency: "usd"} //revisar currency agregar relacion con moneda
     const analysis = await Analysis.create(body);
 
      // Crear la relación en la tabla de unión

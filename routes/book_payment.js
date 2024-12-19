@@ -13,6 +13,32 @@ router.get('/', async (req, res) => {
   }
 });
 
+router.get('/filtered', async (req, res) => {
+  try {
+    const { type } = req.query;
+    console.log(type);
+
+    if (!type) {
+      return res.status(400).json({ error: 'The type parameter is required.' });
+    }
+
+    const bookPayments = await Talonario.findAll({
+      where: {
+        type: type,
+        status: true,
+      }
+    });
+
+    if (bookPayments.length > 0) {
+      res.json(bookPayments);
+    } else {
+      res.status(404).json({ error: 'No active book payments found for the specified type.' });
+    }
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // GET a single talonario by ID
 router.get('/:id', async (req, res) => {
   try {
@@ -50,6 +76,36 @@ router.put('/:id', async (req, res) => {
       res.status(404).json({ error: 'Talonario not found' });
     }
   } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// PUT increment nro_current
+router.put('/:id/increment', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Buscar el talonario por ID
+    const talonario = await Talonario.findByPk(id);
+
+    if (!talonario) {
+      return res.status(404).json({ error: 'Talonario not found' });
+    }
+
+    // Verificar que nro_current no exceda nro_end
+    if (talonario.nro_current >= talonario.nro_end) {
+      return res.status(400).json({ error: 'Cannot increment beyond nro_end' });
+    }
+
+    // Incrementar nro_current
+    talonario.nro_current += 1;
+
+    // Guardar cambios
+    await talonario.save();
+
+    res.json(talonario);
+  } catch (err) {
+    console.error(err);
     res.status(500).json({ error: err.message });
   }
 });

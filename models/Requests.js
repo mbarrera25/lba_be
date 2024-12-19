@@ -21,6 +21,9 @@ const requests = sequelize.define('requests', {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    sub_total: {
+      type: DataTypes.DOUBLE,
+    },
   }, {
     tableName: 'requests',
   });

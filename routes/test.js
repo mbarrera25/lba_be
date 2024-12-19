@@ -8,6 +8,7 @@ const path = require('path');
 const Test = require('../models/test');
 const TestDetail = require('../models/test_detail');
 const upload = multer({ dest: 'uploads/' });
+
 // Crear un nuevo test junto con sus detalles
 router.post('/', async (req, res) => {
   const { code, name, description, price, date, TestDetails } = req.body;
@@ -147,11 +148,13 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
-// Crear un nuevo lote de tests junto con sus detalles
+// Crear un nuevo lote de tests junto con sus detalle
+
 router.post('/bulk', async (req, res) => {
   const tests = req.body.tests; // Se espera que los tests y sus detalles se pasen en el cuerpo de la solicitud
-  console.log(req.body);
-  
+  console.log('*****************************************************************')
+  console.log(tests.size,' son --> tests')
+  console.log('*****************************************************************')
   try {
     // Crear los tests
     const createdTests = await Test.bulkCreate(tests, { returning: true });

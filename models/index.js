@@ -8,6 +8,8 @@ const Currency = require("./currency");
 const payment_method = require("./payment_method");
 const Requests = require("./Requests");
 const Patient = require("./patient");
+const Invoice = require("./Invoice");
+const Invoice_Detail = require("./invoice_detail");
 const bcrypt = require("bcryptjs");
 
 // Sincronizar todos los modelos con la base de datos
@@ -16,6 +18,19 @@ const initDb = async () => {
     // Definir relaciones
     Test.hasMany(TestDetails, { foreignKey: "test_id", onDelete: "CASCADE" });
     TestDetails.belongsTo(Test, { foreignKey: "test_id" });
+
+    Invoice.hasMany(Invoice_Detail, {
+      foreignKey: 'invoice_id', 
+      onDelete: 'CASCADE',
+    });
+    
+    Invoice_Detail.belongsTo(Invoice, {
+      foreignKey: 'invoice_id', 
+    });
+    
+    Invoice.hasOne(Currency, { foreignKey: "currency_id"})
+    Currency.hasOne(Invoice, { foreignKey: "currency_id"})
+
     // Relaciones de Analysis
     Analysis.belongsToMany(Test, {
       through: "analysis_test",
@@ -34,7 +49,7 @@ const initDb = async () => {
     Currency.hasMany(payment_method, { foreignKey: "currency_id" });
     payment_method.belongsTo(Currency, { foreignKey: "currency_id" });
 
-    // Relaciones de Solicitud
+    // Relaciones de request
     Requests.belongsTo(Patient, {
       foreignKey: "patient_id",
       as: "patient",
@@ -62,12 +77,12 @@ const initDb = async () => {
     console.log("Database synchronized.");
 
     // Crear usuario administrador por defecto
-    const adminUser = await User.findOne({ where: { email: "admin@d" } });
+    const adminUser = await User.findOne({ where: { email: "admin@prod.com" } });
     if (!adminUser) {
       const pass = await bcrypt.hash("admin", 10);
       console.log(pass);
       await User.create({
-        email: "admin@d",
+        email: "admin@prod.com",
         password: pass,
         names: "Administrador",
         role: "admin",

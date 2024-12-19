@@ -2,6 +2,8 @@ const express = require('express');
 const router = express()
 const ExchangeCurrency = require('../models/exchange_currency')
 const Currency = require('../models/currency')
+const getRateData = require('./rateData'); 
+const moment = require('moment-timezone');
 
 // Crear una tasa
 router.post('/', async (req, res) => {
@@ -47,6 +49,50 @@ router.get('/', async (req, res) => {
       });
   
       res.status(200).json(exchangeRates);
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  });
+
+  router.get('/today', async (req, res) => {
+    try {
+      const today = moment().tz('America/Caracas').format('YYYY-MM-DD');
+  
+      // Consulta la tasa de cambio para la fecha de hoy
+      let todayRate = await ExchangeCurrency.findOne({
+        where: { date: today },
+        include: Currency
+      });
+  
+      if (!todayRate) {
+        // Si no existe la tasa de cambio del día de hoy, intenta crearla
+        const currency = await Currency.findOne({ where: { iso: "USD" } });
+        const rate = await getRateData();
+  
+        if (!rate) {
+          // Si `getRateData` no devuelve una tasa, responde con un error
+          return res.status(500).json({
+            message: 'No se pudo obtener la tasa de cambio actual.'
+          });
+        }
+  
+        const newExchangeRate = {
+          currency_id: currency.id,
+          rate: rate,
+          date: today
+        };
+  
+        // Crear la nueva tasa en la base de datos
+        const exchangeRates = await ExchangeCurrency.create(newExchangeRate);
+  
+        return res.status(201).json({
+          message: 'Tasa de cambio creada exitosamente',
+          exchangeRate: exchangeRates
+        });
+      } else {
+        // Si la tasa ya existe, la devuelve
+        return res.status(200).json(todayRate);
+      }
     } catch (error) {
       res.status(400).json({ error: error.message });
     }

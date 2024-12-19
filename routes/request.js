@@ -114,4 +114,25 @@ router.get("/:id", async (req, res) => {
         }
       });
 
+      router.patch("/:id/status", async (req, res) => {
+        try {
+          const { status } = req.body; // Se espera que el nuevo status venga en el body
+          if (!status) {
+            return res.status(400).json({ error: "Status is required" });
+          }
+      
+          const solicitud = await Requests.findByPk(req.params.id);
+          if (!solicitud) {
+            return res.status(404).json({ error: "Solicitud not found" });
+          }
+      
+          solicitud.status = status; // Actualizamos el campo status
+          await solicitud.save(); // Guardamos los cambios
+      
+          res.status(200).json({ message: "Status updated successfully", solicitud });
+        } catch (error) {
+          res.status(400).json({ error: error.message });
+        }
+      });
+
       module.exports = router;
