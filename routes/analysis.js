@@ -2,8 +2,8 @@
 const express = require('express');
 const router = express.Router();
 const { Op } = require("sequelize");
-const Analysis = require("../models/analysis");
-const Test = require('../models/test');
+const Analysis = require("../models/Analysis");
+const Test = require('../models/Test');
 const TestDetail = require('../models/test_detail');
 const AnalysisTest = require('../models/analysis_Tests');
 

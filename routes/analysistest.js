@@ -1,8 +1,8 @@
 // routes/analysistest.js
 const express = require('express');
 const router = express.Router();
-const Test = require('../models/test');
-const Analysis = require('../models/analysis');
+const Test = require('../models/Test');
+const Analysis = require('../models/Analysis');
 const AnalysisTest = require('../models/analysis_Tests');
 
 

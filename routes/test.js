@@ -5,7 +5,7 @@ const multer = require('multer');
 const fs = require('fs');
 const path = require('path');
 
-const Test = require('../models/test');
+const Test = require('../models/Test');
 const TestDetail = require('../models/test_detail');
 const upload = multer({ dest: 'uploads/' });
 

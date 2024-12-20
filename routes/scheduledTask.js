@@ -1,6 +1,6 @@
 const cron = require("node-cron");
 const ExchangeCurrency = require("../models/exchange_currency"); // Ajusta la ruta a tus modelos
-const Currency = require("../models/currency"); // Ajusta la ruta a tus modelos
+const Currency = require("../models/Currency"); // Ajusta la ruta a tus modelos
 const axios = require("axios");
 const { Op } = require('sequelize');
 const ExchangeRateLog = require("../models/exchange_rate_log")

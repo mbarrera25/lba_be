@@ -1,6 +1,6 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/database");
-const Currency = require("./currency")
+const Currency = require("./Currency")
 
 const MetodoDePago = sequelize.define(
   "payment_method",

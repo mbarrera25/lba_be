@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express()
-const Currency = require('../models/currency');
+const Currency = require('../models/Currency');
 
 // Controlador para obtener todas las monedas
 

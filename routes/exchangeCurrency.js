@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express()
 const ExchangeCurrency = require('../models/exchange_currency')
-const Currency = require('../models/currency')
+const Currency = require('../models/Currency')
 const getRateData = require('./rateData'); 
 const moment = require('moment-timezone');
 
