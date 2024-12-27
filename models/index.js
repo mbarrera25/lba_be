@@ -10,6 +10,7 @@ const Requests = require("./Requests");
 const Patient = require("./Patient");
 const Invoice = require("./Invoice");
 const Invoice_Detail = require("./invoice_detail");
+const Result = require("./Result_patient");
 const bcrypt = require("bcryptjs");
 
 // Sincronizar todos los modelos con la base de datos
@@ -70,6 +71,23 @@ const initDb = async () => {
       onDelete: "CASCADE",
     });
 
+    Requests.hasMany(Result, {
+      foreignKey: 'request_id',
+      onDelete: 'CASCADE',
+  });
+  
+  Result.belongsTo(Requests, {
+      foreignKey: 'request_id',
+  });
+  
+  TestDetails.hasMany(Result, {
+      foreignKey: 'test_detail_id',
+      onDelete: 'CASCADE',
+  });
+  Result.belongsTo(TestDetails, {
+      foreignKey: 'test_detail_id',
+  });
+  
     await sequelize.authenticate();
     console.log("Connection has been established successfully.");
 

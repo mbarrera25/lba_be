@@ -3,6 +3,58 @@ const Analysis = require("../models/Analysis");
 const Patient = require("../models/Patient");
 const Requests = require("../models/Requests");
 const Request_analysis = require("../models/request_analysis");
+
+router.get("/patient/:patientId", async (req, res) => {
+  try {
+    // Obtener el id del paciente desde los parámetros de la URL
+    const { patientId } = req.params;
+
+    // Buscar los requests asociados con el paciente
+    const requests = await Requests.findAll({
+      where: { patient_id: patientId }, // Filtrar por el id del paciente
+      include: [
+        {
+          model: Patient,
+          as: "patient", // Incluye el paciente en la respuesta
+        },
+        {
+          model: Analysis,
+          as: "analysis", // Incluye los análisis relacionados
+          through: {
+            attributes: [], // Excluye los atributos de la tabla intermedia (request_analysis)
+          },
+          //attributes: ["id", "name", "fecha"], // Devuelve el id, nombre y fecha de cada análisis
+        },
+      ],
+    });
+
+    // Si no se encuentran solicitudes, respondemos con un error
+    if (!requests.length) {
+      return res.status(404).json({ error: "No requests found for this patient" });
+    }
+
+    // Formatear la respuesta en la estructura solicitada
+    console.log(requests);
+    
+    const analysis = requests.map(request => {
+      return {
+        id: request.id,
+        analysis: request.analysis,
+        date: request.date,
+        status: request.status
+      }
+    })
+
+    const response = {
+      patient: requests[0].patient,
+      analysis
+    }
+    // Devolver la respuesta
+    res.status(200).json(response);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
 router.get("/", async (req, res) => {
   try {    
     const { page, size } = req.query;
