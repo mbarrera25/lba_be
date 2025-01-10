@@ -26,7 +26,8 @@ const invoice = sequelize.define('invoice',{
     },
     invoice_number: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        unique: true
 
     },
     total_amount:{
@@ -42,11 +43,30 @@ const invoice = sequelize.define('invoice',{
     },
     rate:{
         type: DataTypes.DOUBLE,
-    }
+    },
+    request_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'requests', // Nombre de la tabla
+          key: 'id',         // Clave primaria en `requests`
+        },
+      },
+      pay_method: {
+        type:DataTypes.STRING
+    },
 
 //currency
 //invoice_line
 
 })
+
+// Relación con requests
+invoice.associate = (models) => {
+    invoice.belongsTo(models.request, {
+      foreignKey: 'request_id',
+      as: 'request',
+    });
+  };
 
 module.exports = invoice;

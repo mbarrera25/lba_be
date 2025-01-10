@@ -5,6 +5,8 @@ const Transaction = require("../models/transaction")
 router.post("/", async (req, res) => {
     try {
         let body = req.body
+        console.log(body);
+        
         const transaction = await Transaction.create(body)
         res.status(201).json(transaction);
     } catch (error) {

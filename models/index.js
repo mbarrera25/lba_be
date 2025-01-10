@@ -24,6 +24,10 @@ const initDb = async () => {
       foreignKey: 'invoice_id', 
       onDelete: 'CASCADE',
     });
+    Invoice.belongsTo(Requests, {
+      foreignKey: 'request_id', // Clave foránea en la tabla `invoices`
+      as: 'request', // Alias opcional
+    });
     
     Invoice_Detail.belongsTo(Invoice, {
       foreignKey: 'invoice_id', 

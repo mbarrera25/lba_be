@@ -43,6 +43,11 @@ const requests = sequelize.define('requests', {
       otherKey: 'analysis_id',
       as: 'analysis',
     });
-  };
+
+    requests.hasOne(models.Invoice, {
+      foreignKey: 'request_id', // Clave foránea en la tabla `invoices`
+      as: 'invoice', // Alias utilizado en la consulta
+    });
+  }
   
   module.exports = requests;

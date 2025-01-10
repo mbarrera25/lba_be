@@ -3,24 +3,32 @@ const { Op } = require("sequelize");
 const Invoice = require("../models/Invoice");
 const InvoiceDetails = require("../models/invoice_detail");
 
-router.post("/", async ( req, res) => {
-    try {
-        let body ={...req.body}
-        const invoice = await Invoice.create(body);
+router.post("/", async (req, res) => {
+  try {
+      // Crear la factura
+      const body = { ...req.body };
+      const invoice = await Invoice.create(body);
 
-        const inv_det = req.body.invoice_line.map( async d => {
-            await InvoiceDetails.create({
-                invoice_id: invoice.id,
-                ...d
-            })
-        })
-        await Promise.all(inv_det);
-        res.status(201).json(invoice);
+      // Crear las líneas de la factura
+      const inv_det_promises = req.body.invoice_line.map(async (d) => {
+          return await InvoiceDetails.create({
+              invoice_id: invoice.id,
+              ...d
+          });
+      });
+      const invoice_line = await Promise.all(inv_det_promises);
 
-    }catch (error){
-        res.status(400).json({ error: error.message })
-    }
-})
+      // Devolver la factura con sus líneas
+      res.status(201).json({
+          ...invoice.toJSON(), // Convierte la factura a JSON
+          invoice_line, // Incluye las líneas
+      });
+
+  } catch (error) {
+      res.status(400).json({ error: error.message });
+  }
+});
+
 
 router.get("/", async (req, res) => {
     try {

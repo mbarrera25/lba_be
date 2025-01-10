@@ -6,7 +6,7 @@ const Transaction = sequelize.define('transaction', {
   id: {
     type: DataTypes.BIGINT,
     primaryKey: true,
-    autoIncrement: false,
+    autoIncrement: true,
     allowNull: false,
   },
   patient: {
@@ -64,6 +64,10 @@ const Transaction = sequelize.define('transaction', {
     type: DataTypes.DECIMAL(10, 2),
     allowNull: false,
     defaultValue: 0,
+  },
+  request_id: {
+    type: DataTypes.BIGINT,
+    allowNull: false,
   },
 }, {
   timestamps: false,
