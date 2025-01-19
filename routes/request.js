@@ -3,7 +3,6 @@ const Analysis = require("../models/Analysis");
 const Patient = require("../models/Patient");
 const Requests = require("../models/Requests");
 const Request_analysis = require("../models/request_analysis");
-const Invoice = require("../models/Invoice");
 const sequelize = require("../config/database");
 const RequestResponseDto = require("../class/requestDto");
 const { getRequestsQuery, getAnalysisQuery, getInvoiceDetailsQuery } = require('./queries/queries'); // Importar las consultas

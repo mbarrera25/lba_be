@@ -10,14 +10,18 @@ const Requests = require("./Requests");
 const Patient = require("./Patient");
 const Invoice = require("./Invoice");
 const Invoice_Detail = require("./invoice_detail");
-const Result = require("./Result_patient");
+const ResultPatient = require("./result_patient");
 const bcrypt = require("bcryptjs");
 
 // Sincronizar todos los modelos con la base de datos
 const initDb = async () => {
   try {
     // Definir relaciones
-    Test.hasMany(TestDetails, { foreignKey: "test_id", onDelete: "CASCADE" });
+    Test.hasMany(TestDetails, 
+      { 
+        foreignKey: "test_id", 
+        as: "TestDetails",
+        onDelete: "CASCADE" });
     TestDetails.belongsTo(Test, { foreignKey: "test_id" });
 
     Invoice.hasMany(Invoice_Detail, {
@@ -39,10 +43,16 @@ const initDb = async () => {
     // Relaciones de Analysis
     Analysis.belongsToMany(Test, {
       through: "analysis_test",
+      as: "Tests", // Alias para la relación
+      foreignKey: "analysis_id",
+      otherKey: "test_id",
       onDelete: "CASCADE",
     });
     Test.belongsToMany(Analysis, {
       through: "analysis_test",
+      as: "Analyses", // Alias para la relación
+      foreignKey: "test_id",
+      otherKey: "analysis_id",
       onDelete: "CASCADE",
     });
 
@@ -75,21 +85,25 @@ const initDb = async () => {
       onDelete: "CASCADE",
     });
 
-    Requests.hasMany(Result, {
+    Requests.hasMany(ResultPatient, {
       foreignKey: 'request_id',
+      as: 'results',
       onDelete: 'CASCADE',
   });
   
-  Result.belongsTo(Requests, {
+  ResultPatient.belongsTo(Requests, {
+    as: 'request',
       foreignKey: 'request_id',
   });
   
-  TestDetails.hasMany(Result, {
+  TestDetails.hasMany(ResultPatient, {
       foreignKey: 'test_detail_id',
+      as: 'results',
       onDelete: 'CASCADE',
   });
-  Result.belongsTo(TestDetails, {
+  ResultPatient.belongsTo(TestDetails, {
       foreignKey: 'test_detail_id',
+      as: 'test_detail',
   });
   
     await sequelize.authenticate();

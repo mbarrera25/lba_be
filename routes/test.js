@@ -29,7 +29,7 @@ router.post('/', async (req, res) => {
     // Consultar el test con sus detalles y devolverlo en la respuesta
     const createdTest = await Test.findOne({
       where: { id: test.id },
-      include: [TestDetail]
+      include: [{model: TestDetail, as: 'TestDetails'}]
     });
 
     res.status(201).json(createdTest);
@@ -77,7 +77,8 @@ router.get('/', async (req, res) => {
       where,
       limit,
       offset,
-      include: TestDetail
+      include: {model: TestDetail, as: 'TestDetails'},
+
     });
 
     res.status(200).json({
@@ -121,7 +122,7 @@ router.get('/search', async (req, res) => {
 router.get('/:id', async (req, res) => {
   try {
     console.log("Soy get/:id")
-    const test = await Test.findByPk(req.params.id, {include: TestDetail});
+    const test = await Test.findByPk(req.params.id, {include: {model: TestDetail, as: 'TestDetails'}});
     if (test) {
       res.status(200).json(test);
     } else {
@@ -136,7 +137,7 @@ router.get('/:id', async (req, res) => {
 // Eliminar un test por ID
 router.delete('/:id', async (req, res) => {
   try {
-    const test = await Test.findByPk(req.params.id,{ include: TestDetail});
+    const test = await Test.findByPk(req.params.id,{ include: {model: TestDetail, as: 'TestDetails'}});
     if (test) {
       await test.destroy();
       res.status(204).end();
@@ -177,7 +178,7 @@ router.post('/bulk', async (req, res) => {
     // Consultar los tests con sus detalles y devolverlos en la respuesta
     const result = await Test.findAll({
       where: { id: createdTests.map(test => test.id) },
-      include: [TestDetail]
+      include: [{model: TestDetail, as: 'TestDetails'}]
     });
 
     res.status(201).json(result);

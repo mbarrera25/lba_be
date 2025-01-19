@@ -12,9 +12,10 @@ const talonarioRoutes = require('./routes/book_payment');
 const metodoDePagoRoutes = require('./routes/payment_method');
 const currency = require('./routes/currency');
 const exchangeRate = require('./routes/exchangeRate');
-const solicitud = require('./routes/request');
+const request = require('./routes/request');
 const invoice = require('./routes/invoices');
 const transaction = require('./routes/transaction');
+const result = require('./routes/result_patient');
 
 const fetchAndSaveExchangeRate = require('./routes/scheduledTask');
 const  initDb  = require('./models/index');
@@ -36,9 +37,10 @@ app.use('/api/talonarios', talonarioRoutes);
 app.use('/api/metodos-de-pago', metodoDePagoRoutes);
 app.use('/api/currency', currency);
 app.use('/api/exchange-rate', exchangeRate);
-app.use('/api/solicitudes', solicitud);
+app.use('/api/solicitudes', request); //!! cambiar a request
 app.use('/api/invoice', invoice);
 app.use('/api/transaction', transaction);
+app.use('/api/loadResult', result);
 
 initDb().then(() => {
   app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

@@ -67,7 +67,7 @@ const Transaction = sequelize.define('transaction', {
   },
   request_id: {
     type: DataTypes.BIGINT,
-    allowNull: false,
+    allowNull: true,
   },
 }, {
   timestamps: false,

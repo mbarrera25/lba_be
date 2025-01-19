@@ -47,6 +47,7 @@ router.get("/", async (req, res) => {
       offset,
       include: {
         model: Test,
+        as: 'Tests',
         through: { attributes: [] } // Esto excluirá los atributos de la tabla de unión
       }
     });
@@ -81,6 +82,7 @@ router.get("/search", async (req, res) => {
       ]
       },include: {
         model: Test,
+        as: 'Tests',
         through: { attributes: [] } // Esto excluirá los atributos de la tabla de unión
       }
     });
