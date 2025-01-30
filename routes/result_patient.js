@@ -4,7 +4,7 @@ const TestDetail = require("../models/test_detail");
 const Analysis = require("../models/Analysis");
 const Requests = require("../models/Requests");
 const RequestsAnalysis = require("../models/request_analysis");
-const ResultPatient = require("../models/result_patient");
+const ResultPatient = require("../models/Result_patient");
 
 router.get("/get-request/:requestId", async (req, res) => {
   try {

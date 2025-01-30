@@ -10,7 +10,7 @@ const Requests = require("./Requests");
 const Patient = require("./Patient");
 const Invoice = require("./Invoice");
 const Invoice_Detail = require("./invoice_detail");
-const ResultPatient = require("./result_patient");
+const ResultPatient = require("./Result_patient");
 const bcrypt = require("bcryptjs");
 
 // Sincronizar todos los modelos con la base de datos
