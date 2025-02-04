@@ -77,6 +77,28 @@ const getInvoiceDetailsQuery = `
   WHERE inv_det.invoice_id = :invoice_id;
 `;
 
+const getResultPatient = `
+select
+	a.name as analisis,
+	td."name" as prueba,
+	rp.valor as resultado,
+	td."indicator" as indicador
+from
+	requests r
+inner join result_patient rp on
+	rp.request_id = r.id  
+inner join test_detail td on
+	td.id = rp.test_detail_id
+left join test t on
+	t.id = td.test_id
+left join analysis_test at on
+	at.test_id = t.id
+inner join analysis a on
+	a.id = at.analysis_id
+where
+	r.id = 4
+`;
+
 module.exports = {
   getRequestsQuery,
   getAnalysisQuery,

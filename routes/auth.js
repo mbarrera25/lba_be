@@ -39,11 +39,11 @@ router.post('/login', async (req, res) => {
       return res.status(400).send('Usuario o contraseña incorrectos');
     }
 
-    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-    res.json({ token });
+    //const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    res.json({ user });
   } catch (err) {
     console.error(err);
-    res.status(500).send('Error al iniciar sesión');
+    res.status(500).send(err,'Error al iniciar sesión');
   }
 });
 
