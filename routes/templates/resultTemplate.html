@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reporte de Laboratorio</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .lab-header {
+            text-align: center;
+            font-style: italic;
+            margin-bottom: 20px;
+        }
+        .patient-data {
+            font-weight: bold;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+         td {
+            border: 1px solid black;
+            padding: 5px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Encabezado -->
+        <div class="lab-header">
+            <img src="logo.png" alt="LBA Logo" style="width: 100px;"> <!-- Agregar la imagen de ser necesario -->
+            <h4>Laboratorio de Biotecnología Aplicada, L.B.A, C.A</h4>
+            <p>RIF: J-40349480-0</p>
+            <p>Sede Guacara</p>
+            <p>Laboratorio Clínico</p>
+        </div>
+
+        <!-- Datos del Paciente -->
+        <div class="row">
+            <div class="col-md-8">
+                <p class="patient-data">NOMBRE Y APELLIDO: <span class="text-uppercase">{{full_name}}</span></p>
+            </div>
+            <div class="col-md-4 text-right">
+                <p class="patient-data">date_birth: <span>{{date_birth}}</span></p>
+                <p class="patient-data">EDAD: <span>{{age}}</span></p>
+            </div>
+        </div>
+
+        <!-- Tablas de resultados -->
+        <div class="row">
+            {{result}}    
+        </div>
+
+    </div>
+
+</body>
+</html>

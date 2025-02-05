@@ -82,25 +82,23 @@ select
 	a.name as analisis,
 	td."name" as prueba,
 	rp.valor as resultado,
-	td."indicator" as indicador
-from
-	requests r
-inner join result_patient rp on
-	rp.request_id = r.id  
-inner join test_detail td on
-	td.id = rp.test_detail_id
-left join test t on
-	t.id = td.test_id
-left join analysis_test at on
-	at.test_id = t.id
-inner join analysis a on
-	a.id = at.analysis_id
+	td."indicator" as indicador,
+	p.full_name as patient,
+	p.date_birth 
+FROM requests r
+INNER JOIN result_patient rp ON rp.request_id = r.id
+inner join test_detail td on td.id  = rp.test_detail_id 
+inner join analysis_test at2 on at2.test_id = td.test_id 
+inner join request_analysis ra on ra.analysis_id = at2.analysis_id and ra.request_id = r.id
+inner join analysis a on a.id = at2.analysis_id 
+INNER JOIN patient p ON r.patient_id = p.id
 where
-	r.id = 4
+	r.id = :request_id order by analisis;
 `;
 
 module.exports = {
   getRequestsQuery,
   getAnalysisQuery,
-  getInvoiceDetailsQuery
+  getInvoiceDetailsQuery,
+  getResultPatient
 };

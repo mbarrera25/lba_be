@@ -5,6 +5,7 @@ const InvoiceDetails = require("../models/invoice_detail");
 const puppeteer = require('puppeteer');
 const path = require("path");
 const fs = require("fs");
+const { formatDate } = require('./services/utils');
 
 router.post("/", async (req, res) => {
   try {
@@ -116,7 +117,7 @@ router.get("/:invoiceId/download", async (req, res) => {
     const templatePath = path.join(__dirname, "./templates/invoiceTemplate.html");
     let htmlTemplate = fs.readFileSync(templatePath, "utf8");
     let date = new Date(invoice.date_at);
-    const formattedDate = `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`;
+    const formattedDate = formatDate(date);
     htmlTemplate = htmlTemplate.replace("{{date}}", formattedDate);
 
     const itemsHtml = invoice.invoice_details.map(item => `
@@ -132,16 +133,16 @@ router.get("/:invoiceId/download", async (req, res) => {
     
 
     htmlTemplate = htmlTemplate
-      .replace("{{name}}", invoice.name)
-      .replace("{{identification}}", invoice.identification)
-      .replace("{{direction}}", invoice.direction)
-      .replace("{{invoice_number}}", invoice.invoice_number)
+      .replace(/{{name}}/g, invoice.name)
+      .replace(/{{identification}}/g, invoice.identification)
+      .replace(/{{direction}}/g, invoice.direction)
+      .replace(/{{invoice_number}}/g, invoice.invoice_number)
       .replace(/{{moneda}}/g, 'Bs.')
-      .replace("{{subtotal_amount}}", invoice.subtotal_amount.toFixed(2))
-      .replace("{{igtf}}", invoice.igtf.toFixed(2))
+      .replace(/{{subtotal_amount}}/g, invoice.subtotal_amount.toFixed(2))
+      .replace(/{{igtf}}/g, invoice.igtf.toFixed(2))
       .replace(/{{total_amount}}/g, invoice.total_amount.toFixed(2))
-      .replace("{{pay_method}}", invoice.pay_method)
-      .replace("{{date}}", formattedDate)
+      .replace(/{{pay_method}}/g, invoice.pay_method)
+      .replace(/{{date}}/g, formattedDate)
       .replace(/{{items}}/g, itemsHtml);
 
 
